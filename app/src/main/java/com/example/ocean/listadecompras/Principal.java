@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.ocean.listadecompras.adapter.ListaProdutoAdapter;
+
 import java.util.ArrayList;
 
 
@@ -31,8 +33,10 @@ public class Principal extends ActionBarActivity {
         produtos.add("macarrão");
         produtos.add("azeite");
 
-       ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, produtos );
+       //ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, produtos );
 
+       // Utilizando o novo array adapter
+        ListaProdutoAdapter arrayAdapter = new ListaProdutoAdapter(produtos, this);
        lv.setAdapter(arrayAdapter);
 
        // Escuta o evento de Click Curto
