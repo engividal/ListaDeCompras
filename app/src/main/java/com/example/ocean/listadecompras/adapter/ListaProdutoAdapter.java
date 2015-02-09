@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,8 @@ import java.util.List;
 
 /**
  * Created by Ismael on 09/02/2015.
+ *
+ * Adapter customizado para imagem da foto do produto
  */
 public class ListaProdutoAdapter extends BaseAdapter {
 
@@ -50,15 +53,17 @@ public class ListaProdutoAdapter extends BaseAdapter {
         String produto = listaProdutos.get(position);
 
         TextView nome = (TextView) view.findViewById(R.id.itemNome);
-
         nome.setText(produto);
 
         Bitmap bmp;
-
         bmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.no_images);
         bmp = Bitmap.createScaledBitmap(bmp, 100,100, true);
         ImageView foto = (ImageView) view.findViewById(R.id.itemFoto);
         foto.setImageBitmap(bmp);
+
+       // TODO Colocar o Check na listview
+       // CheckBox checkBox = (CheckBox) view.findViewById(R.id.itemCheck);
+       //checkBox.setChecked(true);
 
         return view;
     }

@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 
 import com.example.ocean.listadecompras.adapter.ListaProdutoAdapter;
@@ -18,26 +19,43 @@ import java.util.ArrayList;
 public class Principal extends ActionBarActivity {
 
     private ListView lv;
+    private AutoCompleteTextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.principal_layout);
 
         lv = (ListView) findViewById(R.id.lvListagem);
+        textView = (AutoCompleteTextView) findViewById(R.id.edAutoComplete);
 
-        // Instanciating an array list (you don't need to do this,
-        // you already have yours).
-        ArrayList<String> produtos = new ArrayList<String>();
+        // TODO utilizar o bean produto
+        ArrayList<String> produtos = new ArrayList<>();
         produtos.add("arroz");
         produtos.add("feijão");
         produtos.add("macarrão");
         produtos.add("azeite");
 
-       //ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, produtos );
+        // TODO utilizar o bean produto
+        ArrayList<String> produtos2 = new ArrayList<>();
 
-       // Utilizando o novo array adapter
-        ListaProdutoAdapter arrayAdapter = new ListaProdutoAdapter(produtos, this);
+        //TODO Criar ArrayAdapter para o auto complete mostrar imagem
+       ArrayAdapter<String> arrayAdapterInserir = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, produtos );
+        textView.setAdapter(arrayAdapterInserir);
+
+       // Utilizando o array adapter customizado
+        final ListaProdutoAdapter arrayAdapter = new ListaProdutoAdapter(produtos2, this);
        lv.setAdapter(arrayAdapter);
+
+        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                produtos2.add(textView.getText().toString());
+
+                textView.setText("");
+
+                arrayAdapter.notifyDataSetChanged();
+            }
+        });
 
        // Escuta o evento de Click Curto
        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
