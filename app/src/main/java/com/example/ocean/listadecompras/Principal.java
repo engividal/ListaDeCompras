@@ -1,5 +1,6 @@
 package com.example.ocean.listadecompras;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -77,6 +78,24 @@ public class Principal extends ActionBarActivity {
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         lv.setOnScrollListener(touchListener.makeScrollListener());
+
+        //TODO Bug click simples ao clicar no produto seleciona
+        // Escuta o evento de Click Curto
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // TODO form direcionar para o CADASTRO
+            Intent form = new Intent(Principal.this, Cadastro.class);
+
+            String produto = (String) lv.getItemAtPosition(position);
+
+            // Toast.makeText(Principal.this, produto, Toast.LENGTH_LONG).show();
+
+            form.putExtra("PRODUTO", produto);
+
+            startActivity(form);
+        }
+    });
     }
 
 
