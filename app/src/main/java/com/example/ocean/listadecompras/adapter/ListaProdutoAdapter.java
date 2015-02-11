@@ -62,8 +62,8 @@ public class ListaProdutoAdapter extends BaseAdapter {
         foto.setImageBitmap(bmp);
 
        // TODO Colocar o Check na listview
-       // CheckBox checkBox = (CheckBox) view.findViewById(R.id.itemCheck);
-       //checkBox.setChecked(true);
+        CheckBox checkBox = (CheckBox) view.findViewById(R.id.itemCheck);
+        checkBox.setChecked(true);
 
         return view;
     }
