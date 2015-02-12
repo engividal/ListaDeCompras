@@ -31,7 +31,7 @@ public class Principal extends ActionBarActivity {
         textView = (AutoCompleteTextView) findViewById(R.id.edAutoComplete);
 
         // TODO utilizar o bean produto
-        ArrayList<String> produtos = new ArrayList<>();
+        final ArrayList<String> produtos = new ArrayList<>();
         produtos.add("arroz");
         produtos.add("feijão");
         produtos.add("macarrão");
@@ -46,7 +46,7 @@ public class Principal extends ActionBarActivity {
 
        //TODO Utilizar ArrayAdapter com imagem na Lista com Check
         mAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice, produtos2);
+                android.R.layout.simple_list_item_multiple_choice, produtos);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         lv.setAdapter(mAdapter);
@@ -54,7 +54,7 @@ public class Principal extends ActionBarActivity {
         textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                produtos2.add(textView.getText().toString());
+                produtos.add(textView.getText().toString());
 
                 textView.setText("");
 
