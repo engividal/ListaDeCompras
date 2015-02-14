@@ -9,8 +9,19 @@ package com.example.ocean.listadecompras.model.bean;
 public class Produto {
 
     private Long id;
-    private String nome;
-    private String imagem;
+    private String nome = null;
+    private String imagem = null;
+    private Boolean selected = false;
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public Boolean getSelected() {
+        return selected;
+    }
+
+
 
     public Long getId() {
         return id;

@@ -1,70 +1,87 @@
 package com.example.ocean.listadecompras.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ocean.listadecompras.R;
+import com.example.ocean.listadecompras.model.bean.Produto;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Ismael on 09/02/2015.
  *
  * Adapter customizado para imagem da foto do produto
  */
-public class ListaProdutoAdapter extends BaseAdapter {
+public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
 
-    private final List<String> listaProdutos;
-    private final Activity activity;
+    private final ArrayList<Produto> listaProdutos;
+//    private final Activity activity;
+    private Context context;
 
-    public ListaProdutoAdapter(List<String> listaProdutos, Activity activity) {
-        this.listaProdutos = listaProdutos;
-        this.activity = activity;
+    //Context context, int textViewResourceId, ArrayList<Country> countryList
+    public ListaProdutoAdapter(Context context, int textViewResourceId, ArrayList<Produto> listaProdutos) {
+        super(context, textViewResourceId, listaProdutos);
+        this.context = context;
+        this.listaProdutos = new ArrayList<Produto>();
+        this.listaProdutos.addAll(listaProdutos);
     }
 
-    @Override
-    public int getCount() {
-        return listaProdutos.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return listaProdutos.get(position);
-    }
-
-    //TODO implementar apos a construção do banco
-    @Override
-    public long getItemId(int position) {
-        return 0;
+    private class ViewHolder {
+        Bitmap bmp;
+        TextView name;
+        CheckBox produto;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Infla o layout na view
-        View view = activity.getLayoutInflater().inflate(R.layout.item, null);
+        ViewHolder holder = null;
+        Log.v("ConvertView", String.valueOf(position));
 
-        String produto = listaProdutos.get(position);
+        if (convertView == null){
+            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = vi.inflate(R.layout.item, null);
 
-        TextView nome = (TextView) view.findViewById(R.id.itemNome);
-        nome.setText(produto);
+            holder = new ViewHolder();
+            holder.bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_images);
+            holder.bmp = Bitmap.createScaledBitmap(holder.bmp, 100, 100, true);
+            ImageView foto = (ImageView) convertView.findViewById(R.id.itemFoto);
+            foto.setImageBitmap(holder.bmp);
 
-        Bitmap bmp;
-        bmp = BitmapFactory.decodeResource(activity.getResources(), R.drawable.no_images);
-        bmp = Bitmap.createScaledBitmap(bmp, 100,100, true);
-        ImageView foto = (ImageView) view.findViewById(R.id.itemFoto);
-        foto.setImageBitmap(bmp);
+            holder.name = (TextView) convertView.findViewById(R.id.itemNome);
+            holder.produto = (CheckBox) convertView.findViewById(R.id.checkbox);
+            convertView.setTag(holder);
+            //TODO ENTENDER...
+            holder.name.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CheckBox cb = (CheckBox) v;
+                    Produto produto = (Produto) cb.getTag();
+                    Toast.makeText(context.getApplicationContext(), "Clicked on Checkbox: " +" is " + cb.isChecked(),
+                             Toast.LENGTH_LONG).show();
+                    produto.setSelected(cb.isSelected());
+                }
+            });
+        }else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        //TODO ENTENDER...
+        Produto produto = listaProdutos.get(position);
+        holder.name.setText(" (" + produto.getNome() + ")");
+        holder.name.setText(produto.getNome());
+        holder.name.setSelected(produto.getSelected());
+        holder.name.setTag(produto);
 
-       // TODO Colocar o Check na listview
-        CheckBox checkBox = (CheckBox) view.findViewById(R.id.itemCheck);
-        checkBox.setChecked(true);
-
-        return view;
+        return convertView;
     }
 }
