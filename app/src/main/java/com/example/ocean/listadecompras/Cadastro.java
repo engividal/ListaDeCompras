@@ -22,7 +22,7 @@ public class Cadastro extends ActionBarActivity {
         String produto = (String) getIntent().getSerializableExtra("PRODUTO");
 
         if(produto != null) {
-            
+            nome.setText(produto);
         }
 
     }
