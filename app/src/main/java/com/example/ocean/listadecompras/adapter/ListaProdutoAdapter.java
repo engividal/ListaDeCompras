@@ -40,7 +40,7 @@ public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
     private class ViewHolder {
         Bitmap bmp;
         TextView name;
-        CheckBox produto;
+        CheckBox chk;
     }
 
     @Override
@@ -48,40 +48,45 @@ public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
         ViewHolder holder = null;
         Log.v("ConvertView", String.valueOf(position));
 
-        if (convertView == null){
-            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.item, null);
+        View currentView = convertView;
 
+        if (currentView == null) {
+            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            currentView = vi.inflate(R.layout.item, null);
             holder = new ViewHolder();
+
             holder.bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_images);
-            holder.bmp = Bitmap.createScaledBitmap(holder.bmp, 100, 100, true);
-            ImageView foto = (ImageView) convertView.findViewById(R.id.itemFoto);
+            holder.bmp = Bitmap.createScaledBitmap(holder.bmp, 50, 50, true);
+
+            ImageView foto = (ImageView) currentView.findViewById(R.id.itemFoto);
+
             foto.setImageBitmap(holder.bmp);
 
-            holder.name = (TextView) convertView.findViewById(R.id.itemNome);
-            holder.produto = (CheckBox) convertView.findViewById(R.id.checkbox);
-            convertView.setTag(holder);
-            //TODO ENTENDER...
-            holder.name.setOnClickListener( new View.OnClickListener() {
+            holder.name = (TextView) currentView.findViewById(R.id.itemNome);
+            holder.chk = (CheckBox) currentView.findViewById(R.id.checkBox);
+            currentView.setTag(holder);
+
+            holder.chk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox) v;
                     Produto produto = (Produto) cb.getTag();
-                    Toast.makeText(context.getApplicationContext(), "Clicked on Checkbox: " +" is " + cb.isChecked(),
-                             Toast.LENGTH_LONG).show();
-                    produto.setSelected(cb.isSelected());
+                    if(produto != null){
+                    Toast.makeText(context.getApplicationContext(),
+                            "Clicked on Checkbox: " + produto.getNome() +
+                                    " is " + cb.isChecked(),
+                            Toast.LENGTH_LONG).show();
+                    produto.setSelected(cb.isChecked());}
                 }
             });
         }else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder)currentView.getTag();
         }
-        //TODO ENTENDER...
         Produto produto = listaProdutos.get(position);
-        holder.name.setText(" (" + produto.getNome() + ")");
         holder.name.setText(produto.getNome());
-        holder.name.setSelected(produto.getSelected());
-        holder.name.setTag(produto);
+        holder.chk.setChecked(produto.isSelected());
+        holder.chk.setTag(produto);
 
-        return convertView;
+        return currentView;
     }
 }

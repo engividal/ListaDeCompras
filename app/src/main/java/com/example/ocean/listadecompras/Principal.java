@@ -3,6 +3,7 @@ package com.example.ocean.listadecompras;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.ocean.listadecompras.adapter.ListaProdutoAdapter;
+import com.example.ocean.listadecompras.model.bean.Produto;
 import com.example.ocean.listadecompras.swipe.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
@@ -20,7 +24,7 @@ public class Principal extends ActionBarActivity {
 
     private ListView lv;
     private AutoCompleteTextView textView;
-    private ArrayAdapter<String> mAdapter;
+    private ListaProdutoAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,28 +41,54 @@ public class Principal extends ActionBarActivity {
         produtos.add("macarrão");
         produtos.add("azeite");
 
-        // TODO utilizar o bean produto
+
+        // Utilizando o bean produto
         final ArrayList<String> produtos2 = new ArrayList<>();
+        ArrayList<Produto> produtosBean = new ArrayList<Produto>();
+        Produto produto = new Produto("arroz", "imagem",false );
+        produtosBean.add(produto);
+        produto = new Produto("feijão", "imagem", true );
+        produtosBean.add(produto);
 
         //TODO Usar Array mAdapter com imagem no AutoComplete
        ArrayAdapter<String> arrayAdapterInserir = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, produtos );
         textView.setAdapter(arrayAdapterInserir);
 
        //TODO Utilizar ArrayAdapter com imagem na Lista com Check
-        mAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice, produtos);
+        mAdapter = new ListaProdutoAdapter(this, R.layout.item, produtosBean);
+
+
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         lv.setAdapter(mAdapter);
 
-        textView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Click long
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Produto produto = (Produto) parent.getItemAtPosition(position);
+                Toast.makeText(getApplicationContext(),
+                        "Clicked on Row: " + produto.getNome(),
+                        Toast.LENGTH_LONG).show();
+
+                return true;
+            }
+        });
+
+        // Click curto
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                produtos.add(textView.getText().toString());
+                Produto produto = (Produto) lv.getItemAtPosition(position);
 
-                textView.setText("");
+                Intent form = new Intent(Principal.this, Cadastro.class);
 
-                mAdapter.notifyDataSetChanged();
+                Log.i("INTENT", "Enviando o produto: " + produto.getNome());
+
+                form.putExtra("PRODUTO", produto.getNome());
+
+                startActivity(form);
+
             }
         });
 
@@ -79,25 +109,7 @@ public class Principal extends ActionBarActivity {
         // we don't look for swipes.
         lv.setOnScrollListener(touchListener.makeScrollListener());
 
-        //TODO Bug click simples ao clicar no produto seleciona
-        // Escuta o evento de Click Curto
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // TODO form direcionar para o CADASTRO
-            Intent form = new Intent(Principal.this, Cadastro.class);
-
-            String produto = (String) lv.getItemAtPosition(position);
-
-            // Toast.makeText(Principal.this, produto, Toast.LENGTH_LONG).show();
-
-            form.putExtra("PRODUTO", produto);
-
-            startActivity(form);
-        }
-    });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
